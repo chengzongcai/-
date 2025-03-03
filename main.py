@@ -79,7 +79,7 @@ class PercentageCalculatorApp:
         self.result_frame = tk.Frame(root, bg="#f0f0f0")
         self.result_frame.pack(pady=10, fill=tk.X, padx=50)
         
-        # 上限结果 (现在放在上面)
+        # 上限结果 (10%)
         self.upper_frame = tk.Frame(self.result_frame, bg="#f0f0f0")
         self.upper_frame.pack(fill=tk.X, pady=5)
         
@@ -104,8 +104,34 @@ class PercentageCalculatorApp:
             relief=tk.GROOVE
         )
         self.upper_result.pack(side=tk.LEFT, padx=5, fill=tk.X)
+
+        # 上限结果 (20%)
+        self.upper_frame_20 = tk.Frame(self.result_frame, bg="#f0f0f0")
+        self.upper_frame_20.pack(fill=tk.X, pady=5)
         
-        # 下限结果 (现在放在下面)
+        self.upper_label_20 = tk.Label(
+            self.upper_frame_20, 
+            text="上限 (+20%):", 
+            font=("微软雅黑", 12),
+            bg="#f0f0f0",
+            width=12,
+            anchor="w"
+        )
+        self.upper_label_20.pack(side=tk.LEFT)
+        
+        self.upper_result_20 = tk.Label(
+            self.upper_frame_20, 
+            text="--", 
+            font=("微软雅黑", 12, "bold"),
+            bg="#e6e6e6",
+            fg="#333333",
+            width=15,
+            anchor="center",
+            relief=tk.GROOVE
+        )
+        self.upper_result_20.pack(side=tk.LEFT, padx=5, fill=tk.X)
+        
+        # 下限结果 (10%)
         self.lower_frame = tk.Frame(self.result_frame, bg="#f0f0f0")
         self.lower_frame.pack(fill=tk.X, pady=5)
         
@@ -130,6 +156,32 @@ class PercentageCalculatorApp:
             relief=tk.GROOVE
         )
         self.lower_result.pack(side=tk.LEFT, padx=5, fill=tk.X)
+        
+        # 下限结果 (20%)
+        self.lower_frame_20 = tk.Frame(self.result_frame, bg="#f0f0f0")
+        self.lower_frame_20.pack(fill=tk.X, pady=5)
+        
+        self.lower_label_20 = tk.Label(
+            self.lower_frame_20, 
+            text="下限 (-20%):", 
+            font=("微软雅黑", 12),
+            bg="#f0f0f0",
+            width=12,
+            anchor="w"
+        )
+        self.lower_label_20.pack(side=tk.LEFT)
+        
+        self.lower_result_20 = tk.Label(
+            self.lower_frame_20, 
+            text="--", 
+            font=("微软雅黑", 12, "bold"),
+            bg="#e6e6e6",
+            fg="#333333",
+            width=15,
+            anchor="center",
+            relief=tk.GROOVE
+        )
+        self.lower_result_20.pack(side=tk.LEFT, padx=5, fill=tk.X)
         
         # 存储上一次输入的值，用于比较是否有变化
         self.last_input = ""
@@ -175,7 +227,7 @@ class PercentageCalculatorApp:
         self.root.after(500, self.check_input_changes)
         
     def calculate_range(self, show_error=True):
-        """计算输入数字的上下10%范围"""
+        """计算输入数字的上下10%和20%范围"""
         try:
             # 获取输入值并转换为浮点数
             input_text = self.input_entry.get().strip()
@@ -184,17 +236,23 @@ class PercentageCalculatorApp:
             if not input_text:
                 self.lower_result.config(text="--")
                 self.upper_result.config(text="--")
+                self.lower_result_20.config(text="--")
+                self.upper_result_20.config(text="--")
                 return
                 
             input_value = float(input_text)
             
-            # 计算上下10%的范围
-            lower_bound = input_value * 0.9  # 下限 (减去10%)
-            upper_bound = input_value * 1.1  # 上限 (加上10%)
+            # 计算上下10%和20%的范围
+            lower_bound_10 = input_value * 0.9  # 下限 (减去10%)
+            upper_bound_10 = input_value * 1.1  # 上限 (加上10%)
+            lower_bound_20 = input_value * 0.8  # 下限 (减去20%)
+            upper_bound_20 = input_value * 1.2  # 上限 (加上20%)
             
             # 更新结果显示
-            self.lower_result.config(text=f"{lower_bound:.2f}")
-            self.upper_result.config(text=f"{upper_bound:.2f}")
+            self.lower_result.config(text=f"{lower_bound_10:.2f}")
+            self.upper_result.config(text=f"{upper_bound_10:.2f}")
+            self.lower_result_20.config(text=f"{lower_bound_20:.2f}")
+            self.upper_result_20.config(text=f"{upper_bound_20:.2f}")
             
         except ValueError:
             # 只有在show_error为True时才显示错误消息
@@ -205,6 +263,8 @@ class PercentageCalculatorApp:
             # 输入无效时显示默认值
             self.lower_result.config(text="--")
             self.upper_result.config(text="--")
+            self.lower_result_20.config(text="--")
+            self.upper_result_20.config(text="--")
 
 def main():
     root = tk.Tk()
